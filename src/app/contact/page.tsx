@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Contact',
   description:
     'K Works Studio 분기형 문의 · 작품 제안, 캐스팅 의뢰, CF 협찬, 언론 취재, 일반.',
+  alternates: { canonical: '/contact' },
 }
 
 export default function ContactPage() {

@@ -22,6 +22,7 @@ export async function generateMetadata({
   return {
     title: notice.title,
     description: notice.body.slice(0, 140),
+    alternates: { canonical: `/notice/${notice.id}` },
   }
 }
 

@@ -23,6 +23,7 @@ export async function generateMetadata({
   return {
     title: `${artist.ko} ${artist.en}`,
     description: artist.bioShort,
+    alternates: { canonical: `/artists/${artist.slug}` },
   }
 }
 

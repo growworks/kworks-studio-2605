@@ -5,6 +5,7 @@ import { ARTISTS } from '@/data/artists'
 export const metadata: Metadata = {
   title: 'Artists',
   description: 'K Works Studio 소속 배우. 화보 그리드와 개별 프로필.',
+  alternates: { canonical: '/artists' },
 }
 
 export default function ArtistsPage() {

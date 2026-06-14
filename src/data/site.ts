@@ -2,7 +2,7 @@ export const SITE = {
   brand: 'K Works Studio',
   brandKo: '케이웍스 스튜디오',
   brandShort: 'K Works',
-  description: '영화·콘텐츠 제작과 배우 매니지먼트. 우리는 이야기를 만든다.',
+  description: '영화 제작 및 콘텐츠 제작과 아티스트를 위한 매니지먼트 기업입니다.',
   footerLead: '영화와 사람에게 시간을 쓰는 회사. 우리는 이야기가 오래 머무는 방식을 고민합니다.',
   address: '경기도 고양시 덕양구 항동로 217, DMC 플렉스데시앙 A타워 1407호',
   addressShort: '경기도 고양시 덕양구 항동로 217\nDMC 플렉스데시앙 A타워 1407호',

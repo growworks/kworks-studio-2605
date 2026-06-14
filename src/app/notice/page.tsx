@@ -5,6 +5,7 @@ import { NOTICES } from '@/data/notices'
 export const metadata: Metadata = {
   title: 'Notice',
   description: 'K Works Studio 공식 공지와 보도자료.',
+  alternates: { canonical: '/notice' },
 }
 
 const PAGE_SIZE = 3

@@ -5,6 +5,7 @@ import { PRODUCTIONS } from '@/data/productions'
 export const metadata: Metadata = {
   title: 'Production',
   description: 'K Works Studio 필모그래피. 영화·드라마·단편 콘텐츠 작품 목록.',
+  alternates: { canonical: '/production' },
 }
 
 export default function ProductionPage() {

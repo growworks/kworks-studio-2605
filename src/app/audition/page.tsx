@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Audition',
   description:
     'K Works Studio 상시 오디션. 배우(연기자) 모집, 성별·연령·국적 제한 없음.',
+  alternates: { canonical: '/audition' },
 }
 
 export default function AuditionPage() {

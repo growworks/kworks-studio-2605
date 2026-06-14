@@ -9,8 +9,8 @@ import { SITE_URL } from '@/lib/constants'
 import { organizationLd, websiteLd } from '@/lib/seo/jsonld'
 import './globals.css'
 
-const TITLE_DEFAULT = `${SITE.brand} | ${SITE.brandKo}`
-const DESCRIPTION = `${SITE.brand} · 영화·콘텐츠 제작과 배우 매니지먼트. 우리는 이야기를 만든다.`
+const TITLE_DEFAULT = 'k-works studio'
+const DESCRIPTION = SITE.description
 
 export const viewport: Viewport = {
   themeColor: '#0B0B0C',
@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   applicationName: SITE.brand,
   metadataBase: SITE_URL ? new URL(SITE_URL) : new URL('https://k-worksstudio.com'),
+  alternates: { canonical: '/' },
   icons: {
     icon: [
       { url: '/assets/images/logo_b.png', type: 'image/png' },
@@ -50,6 +51,11 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
   },
   robots: { index: true, follow: true },
+  verification: {
+    other: {
+      'naver-site-verification': '5b231666c6c226f3bd091b26c427ae420f525495',
+    },
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
