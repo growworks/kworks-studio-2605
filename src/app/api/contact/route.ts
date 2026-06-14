@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { contactSchema } from '@/lib/validations'
 import { API_BASE_URL, SITE_SLUG } from '@/lib/constants'
+import { composeContactMessage } from '@/lib/contact-message'
 
+/**
+ * 케이웍스스튜디오 상담신청 라우트.
+ *
+ * 폼은 16 개 필드를 보내지만 공개 API(openapi-kworksstudio.yaml)는
+ * `name`, `phone`, `serviceType`, `message` 4 필드만 저장한다.
+ * 나머지 입력 항목은 `composeContactMessage` 가 사람이 읽기 좋은
+ * 형태로 본문에 합쳐 운영자에게 전달한다.
+ */
+
+// 분기 코드 → 명세 §info "상담신청 주제" 표의 serviceType 값
 const BRANCH_LABEL: Record<string, string> = {
   project: '작품 제안',
   casting: '캐스팅 의뢰',
-  cf: 'CF · 광고 협찬',
-  press: '언론·취재 문의',
+  cf: '광고 협찬',
+  press: '언론·취재',
   etc: '일반 문의',
 }
 
@@ -23,44 +34,39 @@ export async function POST(request: NextRequest) {
     }
 
     const data = parsed.data
-    const branchLabel = BRANCH_LABEL[data.branch] ?? data.branchLabel ?? '일반 문의'
+    const branchLabel =
+      BRANCH_LABEL[data.branch] ?? data.branchLabel ?? '일반 문의'
 
-    const payload = {
-      branch: data.branch,
-      branchLabel,
+    const apiPayload = {
       name: data.name,
-      company: data.company,
-      email: data.email,
-      phone: data.phone ?? null,
-      projectType: data.projectType ?? null,
-      projectPeriod: data.projectPeriod ?? null,
-      actor: data.actor ?? null,
-      schedule: data.schedule ?? null,
-      brand: data.brand ?? null,
-      campaign: data.campaign ?? null,
-      model: data.model ?? null,
-      media: data.media ?? null,
-      topic: data.topic ?? null,
-      message: data.message,
+      phone: data.phone,
+      serviceType: branchLabel,
+      message: composeContactMessage(data, branchLabel),
     }
 
     if (process.env.CONTACT_API_MOCK === 'true' || !SITE_SLUG) {
-      console.log('[K Works Contact]', JSON.stringify(payload, null, 2))
+      console.log(
+        '[K Works Contact · MOCK]',
+        JSON.stringify(apiPayload, null, 2),
+      )
       return NextResponse.json({
         success: true,
         message: `[${branchLabel}] 문의가 담당 부서로 전달되었습니다.`,
       })
     }
 
-    const apiResponse = await fetch(`${API_BASE_URL}/v1/${SITE_SLUG}/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
+    const apiResponse = await fetch(
+      `${API_BASE_URL}/v1/${SITE_SLUG}/contact`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(apiPayload),
+      },
+    )
 
     if (!apiResponse.ok) {
-      const errorText = await apiResponse.text()
-      console.error('[Contact API Error]', apiResponse.status, errorText)
+      const errorBody = await apiResponse.text()
+      console.error('[Contact API Error]', apiResponse.status, errorBody)
       throw new Error(`API responded with ${apiResponse.status}`)
     }
 
