@@ -1,12 +1,23 @@
 import Link from 'next/link'
 import { HeroParallax } from '@/components/layout/HeroParallax'
 import { Carousel } from '@/components/ui/Carousel'
-import { ARTISTS } from '@/data/artists'
-import { NOTICES } from '@/data/notices'
-import { PRODUCTIONS } from '@/data/productions'
+import { getPortfolios } from '@/lib/api/portfolios'
+import { getPosts } from '@/lib/api/posts'
+import { mapArtist, mapProduction, mapNotice } from '@/lib/api/mappers'
+import { getReleaseYear } from '@/data/productions'
 
-export default function HomePage() {
-  const recentNotices = NOTICES.slice(0, 3)
+export const dynamic = 'force-dynamic'
+
+export default async function HomePage() {
+  const [prodList, artistList, noticeList] = await Promise.all([
+    getPortfolios({ category: '프로덕션' }),
+    getPortfolios({ category: '아티스트' }),
+    getPosts({ category: '공지사항' }),
+  ])
+
+  const productions = prodList.items.map(mapProduction)
+  const artists = artistList.items.map((p, i) => mapArtist(p, i + 1))
+  const recentNotices = noticeList.items.slice(0, 3).map(mapNotice)
 
   return (
     <>
@@ -56,7 +67,7 @@ export default function HomePage() {
               </>
             }
           >
-            {PRODUCTIONS.map((p) => (
+            {productions.map((p) => (
               <Link
                 key={p.slug}
                 className="kw-card-work"
@@ -67,7 +78,7 @@ export default function HomePage() {
                 </div>
                 <div className="kw-card-work__meta">
                   <p className="en">
-                    {p.en} · {p.year}
+                    {p.en} · {getReleaseYear(p)}
                   </p>
                   <h3 className="h-serif">{p.ko}</h3>
                   <span className="kw-card-work__tag">{p.genre}</span>
@@ -97,7 +108,7 @@ export default function HomePage() {
           </div>
 
           <div className="kw-featured-artists fade-up">
-            {ARTISTS.map((a) => (
+            {artists.map((a) => (
               <Link
                 key={a.slug}
                 className="kw-featured-artists__card"

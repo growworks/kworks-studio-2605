@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { PRODUCTIONS } from '@/data/productions'
+import { getPortfolios } from '@/lib/api/portfolios'
+import { mapProduction } from '@/lib/api/mappers'
+import { getReleaseYear } from '@/data/productions'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Production',
@@ -8,9 +12,9 @@ export const metadata: Metadata = {
   alternates: { canonical: '/production' },
 }
 
-export default function ProductionPage() {
-  const filmCount = PRODUCTIONS.filter((p) => p.category === 'film').length
-  const dramaCount = PRODUCTIONS.filter((p) => p.category === 'drama').length
+export default async function ProductionPage() {
+  const list = await getPortfolios({ category: '프로덕션' })
+  const productions = list.items.map(mapProduction)
 
   return (
     <>
@@ -28,7 +32,7 @@ export default function ProductionPage() {
       <section className="section">
         <div className="container container--wide">
           <div className="kw-prod-grid fade-up">
-            {PRODUCTIONS.map((p) => (
+            {productions.map((p) => (
               <Link
                 key={p.slug}
                 href={`/production/${p.slug}`}
@@ -39,7 +43,7 @@ export default function ProductionPage() {
                 </div>
                 <div className="kw-prod-card__meta">
                   <p className="en">
-                    {p.en} · {p.year}
+                    {p.en} · {getReleaseYear(p)}
                   </p>
                   <h3 className="ko">{p.ko}</h3>
                   <p className="info">
@@ -56,7 +60,7 @@ export default function ProductionPage() {
             className="kw-disclaimer"
             style={{ textAlign: 'left', marginTop: 'var(--sp-12)' }}
           >
-            K Works Studio · 총 {PRODUCTIONS.length}편 (장편영화 {filmCount} · 드라마 {dramaCount}).
+            K Works Studio · 총 {productions.length}편.
           </p>
         </div>
       </section>

@@ -85,10 +85,10 @@ export function movieLd(prod: Production) {
     alternateName: prod.en,
     url: `${base}/production/${prod.slug}`,
     image: `${base}${prod.poster}`,
-    datePublished: prod.year,
+    datePublished: prod.releaseDate ?? '',
     director: { '@type': 'Person', name: prod.director },
     productionCompany: { '@type': 'Organization', name: SITE.brand },
-    description: prod.synopsisLead,
+    description: prod.description.split('\n')[0],
     actor: prod.cast.lead.map((c) => ({ '@type': 'Person', name: c.name })),
     inLanguage: 'ko-KR',
   }

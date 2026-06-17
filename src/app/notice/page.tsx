@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { NOTICES } from '@/data/notices'
+import { getPosts } from '@/lib/api/posts'
+import { mapNotice } from '@/lib/api/mappers'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Notice',
@@ -18,13 +21,16 @@ export default async function NoticePage({
   searchParams: SearchParams
 }) {
   const { page } = await searchParams
-  const totalPages = Math.max(1, Math.ceil(NOTICES.length / PAGE_SIZE))
+  const list = await getPosts({ category: '공지사항' })
+  const notices = list.items.map(mapNotice)
+
+  const totalPages = Math.max(1, Math.ceil(notices.length / PAGE_SIZE))
   const current = Math.min(
     totalPages,
     Math.max(1, parseInt(page ?? '1', 10) || 1),
   )
   const start = (current - 1) * PAGE_SIZE
-  const items = NOTICES.slice(start, start + PAGE_SIZE)
+  const items = notices.slice(start, start + PAGE_SIZE)
 
   return (
     <>

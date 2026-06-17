@@ -11,7 +11,10 @@ export type Production = {
   slug: string
   ko: string
   en: string
-  year: string
+  /**
+   * 개봉일 (YYYY.MM.DD). admin 매핑: customSchema 의 field_14.
+   * 연도가 필요한 곳은 getReleaseYear() 로 추출하므로 별도 year 필드를 두지 않는다.
+   */
   releaseDate?: string
   genre: string
   runtime?: string
@@ -21,17 +24,14 @@ export type Production = {
   poster: string
   stills?: { src: string; alt: string }[]
   category: 'film' | 'drama' | 'short' | 'ongoing'
-  synopsisLead: string
-  synopsisBody: string
+  description: string
   trailer?: { youtubeId: string; title: string }
   cast: {
     director: string
     screenplay: string
     lead: { artistSlug?: string; name: string }[]
     supporting?: string
-    music?: string
     producer?: string
-    distributor?: string
   }
   watchOn: WatchOnPlatform[]
 }
@@ -41,7 +41,6 @@ export const PRODUCTIONS: Production[] = [
     slug: 'chaebi',
     ko: '채비',
     en: 'The Preparation',
-    year: '2017',
     releaseDate: '2017.11.09',
     genre: '장편영화 · 드라마',
     runtime: '114분',
@@ -73,9 +72,8 @@ export const PRODUCTIONS: Production[] = [
       { src: '/assets/images/movies/chaebi/character-03.jpg', alt: '〈채비〉 캐릭터 포스터 ·애순 (고두심)' },
     ],
     category: 'film',
-    synopsisLead: '30년 전통의 프로 잔소리꾼 vs 30년 내공의 프로 사고뭉치, 특별한 모자가 그려낸 분주한 이별 준비.',
-    synopsisBody:
-      '일곱살 같은 서른살 아들 인규를 24시간 특별 케어(?) 하느라 어느 새 30년 프로 잔소리꾼이 된 엄마 애순 씨는 앞으로 아들과 함께 할 시간이 많지 않음을 알게 된다. 자신이 떠난 후 남겨질 아들을 생각하니 또다시 걱정만 한 가득인 애순 씨는 세상과 어울리며 홀로 살아갈 인규를 위한 그녀만의 특별한 체크 리스트를 작성하고, 잠시 소원했던 첫째 딸 문경과 동네 사람들의 도움을 받으며 빈칸을 하나씩 채워나가기 시작하는데...',
+    description:
+      '30년 전통의 프로 잔소리꾼 vs 30년 내공의 프로 사고뭉치, 특별한 모자가 그려낸 분주한 이별 준비.\n\n일곱살 같은 서른살 아들 인규를 24시간 특별 케어(?) 하느라 어느 새 30년 프로 잔소리꾼이 된 엄마 애순 씨는 앞으로 아들과 함께 할 시간이 많지 않음을 알게 된다. 자신이 떠난 후 남겨질 아들을 생각하니 또다시 걱정만 한 가득인 애순 씨는 세상과 어울리며 홀로 살아갈 인규를 위한 그녀만의 특별한 체크 리스트를 작성하고, 잠시 소원했던 첫째 딸 문경과 동네 사람들의 도움을 받으며 빈칸을 하나씩 채워나가기 시작하는데...',
     cast: {
       director: '조영준',
       screenplay: '조영준',
@@ -92,7 +90,6 @@ export const PRODUCTIONS: Production[] = [
     slug: 'bring-me-home',
     ko: '나를 찾아줘',
     en: 'Bring Me Home',
-    year: '2019',
     releaseDate: '2019.11.27',
     genre: '장편영화 · 스릴러',
     runtime: '107분',
@@ -109,9 +106,8 @@ export const PRODUCTIONS: Production[] = [
       { src: '/assets/images/movies/bring-me-home/character-03.jpg', alt: '〈나를 찾아줘〉 캐릭터 포스터 ·박해준' },
     ],
     category: 'film',
-    synopsisLead: '모두가 진실을 숨기고 있다',
-    synopsisBody:
-      '6년 전 정연의 아들이 실종됐다. 정연과 남편 명국은 실의와 죄책감으로 힘든 시간을 보내지만 아이를 찾을 수 있다는 희망을 포기하지 않는다. 어느 날 6년 전 실종된 아들을 봤다는 연락을 받은 정연. 숱하게 반복되던 거짓 제보와 달리 생김새부터 흉터까지 똑같은 아이를 봤다는 낯선 이의 이야기에 정연은 지체 없이 홀로 낯선 곳으로 향한다. 하지만 자신의 등장을 경계하는 듯한 경찰 홍경장과 비슷한 아이를 본 적도 없다는 마을 사람들. 그들이 뭔가 숨기고 있음을 직감한 정연은 포기하지 않고 진실을 찾기 시작하는데…',
+    description:
+      '모두가 진실을 숨기고 있다\n\n6년 전 정연의 아들이 실종됐다. 정연과 남편 명국은 실의와 죄책감으로 힘든 시간을 보내지만 아이를 찾을 수 있다는 희망을 포기하지 않는다. 어느 날 6년 전 실종된 아들을 봤다는 연락을 받은 정연. 숱하게 반복되던 거짓 제보와 달리 생김새부터 흉터까지 똑같은 아이를 봤다는 낯선 이의 이야기에 정연은 지체 없이 홀로 낯선 곳으로 향한다. 하지만 자신의 등장을 경계하는 듯한 경찰 홍경장과 비슷한 아이를 본 적도 없다는 마을 사람들. 그들이 뭔가 숨기고 있음을 직감한 정연은 포기하지 않고 진실을 찾기 시작하는데…',
     cast: {
       director: '김승우',
       screenplay: '김승우',
@@ -127,7 +123,6 @@ export const PRODUCTIONS: Production[] = [
     slug: 'spring-again',
     ko: '다시, 봄',
     en: 'Spring, Again',
-    year: '2018',
     releaseDate: '2019.04.17',
     genre: '장편영화 · 드라마 · 판타지',
     runtime: '104분',
@@ -140,9 +135,8 @@ export const PRODUCTIONS: Production[] = [
       { src: '/assets/images/movies/spring-again/still-03.jpg', alt: '〈다시, 봄〉 스틸 ·호민' },
     ],
     category: 'film',
-    synopsisLead: '어제로 흐르는 시간, 인생의 두 번째 기회를 만났습니다.',
-    synopsisBody:
-      "인생의 유일한 행복인 딸을 사고로 잃은 후 절망에 빠진 '은조'(이청아). 중대한 결심을 한 그날, 눈을 떠보니 시간이 어제로 되돌아갔다. 거꾸로 흐르는 시간을 살게 된 '은조'는 불행했던 자신의 어제를 바꾸며 행복한 시간을 보내지만, 계속 어제로 흐르는 시간에 마음이 초조해진다. 그러던 어느 날, 시간여행에 관한 미스터리한 키를 쥔 남자 '호민'(홍종현)을 만나게 되는데…",
+    description:
+      "어제로 흐르는 시간, 인생의 두 번째 기회를 만났습니다.\n\n인생의 유일한 행복인 딸을 사고로 잃은 후 절망에 빠진 '은조'(이청아). 중대한 결심을 한 그날, 눈을 떠보니 시간이 어제로 되돌아갔다. 거꾸로 흐르는 시간을 살게 된 '은조'는 불행했던 자신의 어제를 바꾸며 행복한 시간을 보내지만, 계속 어제로 흐르는 시간에 마음이 초조해진다. 그러던 어느 날, 시간여행에 관한 미스터리한 키를 쥔 남자 '호민'(홍종현)을 만나게 되는데…",
     cast: {
       director: '정용주',
       screenplay: '정용주',
@@ -158,7 +152,6 @@ export const PRODUCTIONS: Production[] = [
     slug: 'a-child-of-silent',
     ko: '울지 않는 아이',
     en: 'A Child of Silent',
-    year: '2024',
     releaseDate: '2025.04.09',
     genre: '장편영화 · 드라마',
     runtime: '109분',
@@ -169,9 +162,8 @@ export const PRODUCTIONS: Production[] = [
       { src: '/assets/images/movies/a-child-of-silent/still-01.jpg', alt: '〈울지 않는 아이〉 스틸 ·순임' },
     ],
     category: 'film',
-    synopsisLead: '손녀를 위해, 할머니의 마지막 결심.',
-    synopsisBody:
-      '친모에게 학대를 당하고 있는 손녀 수아를 구하기 위해 마지막 결심을 하는 할머니 순임의 이야기.',
+    description:
+      '손녀를 위해, 할머니의 마지막 결심.\n\n친모에게 학대를 당하고 있는 손녀 수아를 구하기 위해 마지막 결심을 하는 할머니 순임의 이야기.',
     cast: {
       director: '이혁종',
       screenplay: '이혁종',
@@ -187,7 +179,6 @@ export const PRODUCTIONS: Production[] = [
     slug: 'love-again',
     ko: '두번할까요',
     en: 'LOVE, AGAIN',
-    year: '2019',
     releaseDate: '2019.10.17',
     genre: '장편영화 · 코미디 · 멜로',
     runtime: '112분',
@@ -204,9 +195,8 @@ export const PRODUCTIONS: Production[] = [
       { src: '/assets/images/movies/love-again/character-01.jpg', alt: '〈두번할까요〉 캐릭터 포스터 ·현우' },
     ],
     category: 'film',
-    synopsisLead: "그 날의 '이혼식' 이후 제대로 꼬이기 시작했다?!",
-    synopsisBody:
-      '꿈꿔왔던 싱글라이프 현우. 쪽팔림을 무릅쓰고 감행했던 이혼식 후, 드디어 싱글라이프 입성! 꿈꿔왔던 자유를 되찾은 것도 잠시 엑스와이프 선영이 다시 돌아왔다. 게다가 옛 친구 상철까지 달고! 원치않던 싱글라이프 선영. 꼭 해야만했던 이혼식 후, 어쩌다 보니 싱글라이프 입성! 원수 같던 현우와 헤어지긴 했지만 그 없이는 어려운 일 투성이다. 그러던 어느 날, 모든 게 완벽한 상철이 나타났다! 끝내고픈 싱글라이프 상철. 이상형 선영과의 강렬한 만남 후, 잘만하면 싱글라이프 청산 가능! 얼굴, 능력 다 되지만 연애는 어떻게 하는 건지 도통 모르겠다. 별 수 없이 연애 상담을 위해 현우를 찾아가는데... 다시 얽혀버린 세 남녀의 출구 없는 싱글라이프가 펼쳐진다!',
+    description:
+      "그 날의 '이혼식' 이후 제대로 꼬이기 시작했다?!\n\n꿈꿔왔던 싱글라이프 현우. 쪽팔림을 무릅쓰고 감행했던 이혼식 후, 드디어 싱글라이프 입성! 꿈꿔왔던 자유를 되찾은 것도 잠시 엑스와이프 선영이 다시 돌아왔다. 게다가 옛 친구 상철까지 달고! 원치않던 싱글라이프 선영. 꼭 해야만했던 이혼식 후, 어쩌다 보니 싱글라이프 입성! 원수 같던 현우와 헤어지긴 했지만 그 없이는 어려운 일 투성이다. 그러던 어느 날, 모든 게 완벽한 상철이 나타났다! 끝내고픈 싱글라이프 상철. 이상형 선영과의 강렬한 만남 후, 잘만하면 싱글라이프 청산 가능! 얼굴, 능력 다 되지만 연애는 어떻게 하는 건지 도통 모르겠다. 별 수 없이 연애 상담을 위해 현우를 찾아가는데... 다시 얽혀버린 세 남녀의 출구 없는 싱글라이프가 펼쳐진다!",
     cast: {
       director: '박용집',
       screenplay: '박용집',
@@ -223,4 +213,9 @@ export const PRODUCTIONS: Production[] = [
 
 export function findProduction(slug: string): Production | undefined {
   return PRODUCTIONS.find((p) => p.slug === slug)
+}
+
+/** releaseDate(YYYY.MM.DD) 에서 연도만 추출. 없으면 빈 문자열. */
+export function getReleaseYear(prod: Production): string {
+  return prod.releaseDate?.split('.')[0] ?? ''
 }

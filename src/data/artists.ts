@@ -33,11 +33,9 @@ export type Artist = {
   height?: string
   education: string
   debut: string
-  languages: string
   agency: string
   sns?: { label: string; href: string }
-  bioShort: string
-  bioLong: string
+  description: string
   heroImage: string
   cardImage: string
   profileImage: string
@@ -59,10 +57,8 @@ export const ARTISTS: Artist[] = [
     birthYearShort: 'b.1969',
     education: '고교 시절부터 연극 시작',
     debut: '1990, 현대극단 연극 무대 데뷔',
-    languages: '한국어 (네이티브)',
     agency: 'K Works Studio',
-    bioShort: '한 장면을 오래 기억하게 만드는 배우.',
-    bioLong:
+    description:
       '한 장면을 오래 기억하게 만드는 배우.\n오랜 시간 한국 영화와 드라마를 지켜온 중견.',
     heroImage: '/assets/images/res/yoon-02.jpg',
     cardImage: '/assets/images/res/yoon-01.jpg',
@@ -174,10 +170,8 @@ export const ARTISTS: Artist[] = [
     birthYearShort: 'b.1964',
     education: '동국대학교 연극예술학과 석사 졸업 · 단국대학교 대학원 국어국문학 박사과정 수료',
     debut: '1985, 무용제 〈도시이야기〉 연극 데뷔',
-    languages: '한국어 (네이티브)',
     agency: 'K Works Studio',
-    bioShort: '한 마디의 무게로 장면을 다스리는 배우.',
-    bioLong:
+    description:
       '한 마디의 무게로 장면을 다스리는 배우.\n연극·뮤지컬·스크린을 오가며 40년을 쌓은 중견.',
     heroImage: '/assets/images/res/lee-03.jpg',
     cardImage: '/assets/images/res/lee-03.jpg',

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ARTISTS } from '@/data/artists'
+import { getPortfolios } from '@/lib/api/portfolios'
+import { mapArtist } from '@/lib/api/mappers'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Artists',
@@ -8,7 +11,10 @@ export const metadata: Metadata = {
   alternates: { canonical: '/artists' },
 }
 
-export default function ArtistsPage() {
+export default async function ArtistsPage() {
+  const list = await getPortfolios({ category: '아티스트' })
+  const artists = list.items.map((p, i) => mapArtist(p, i + 1))
+
   return (
     <>
       <section className="kw-page-hero">
@@ -28,11 +34,13 @@ export default function ArtistsPage() {
             <span className="kw-artists-count__label">
               K Works가 함께하는 배우들.
             </span>
-            <span className="kw-artists-count__count">Updated 2026</span>
+            <span className="kw-artists-count__count">
+              Total {artists.length}
+            </span>
           </div>
 
           <div className="kw-featured-artists fade-up">
-            {ARTISTS.map((a) => (
+            {artists.map((a) => (
               <Link
                 key={a.slug}
                 href={`/artists/${a.slug}`}
@@ -45,7 +53,8 @@ export default function ArtistsPage() {
                   <div className="kw-featured-artists__card__name">
                     <span className="h-serif">{a.ko}</span>
                     <span className="en">
-                      {a.en} · {a.birthYearShort}
+                      {a.en}
+                      {a.birthYearShort ? ` · ${a.birthYearShort}` : ''}
                     </span>
                   </div>
                   <div className="kw-featured-artists__card__stat">

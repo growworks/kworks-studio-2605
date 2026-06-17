@@ -1,15 +1,24 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { PRODUCTIONS, findProduction } from '@/data/productions'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { movieLd } from '@/lib/seo/jsonld'
 import { ProductionGallery } from '@/components/ui/ProductionGallery'
+import { getReleaseYear } from '@/data/productions'
+import { getPortfolios } from '@/lib/api/portfolios'
+import { mapProduction } from '@/lib/api/mappers'
+
+export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
 
-export function generateStaticParams() {
-  return PRODUCTIONS.map((p) => ({ slug: p.slug }))
+async function loadProduction(slug: string) {
+  const list = await getPortfolios({ category: '프로덕션' })
+  const found = list.items.find((p) => {
+    const customSlug = (p.custom as Record<string, unknown> | null | undefined)?.slug
+    return typeof customSlug === 'string' && customSlug === slug
+  })
+  return found ? mapProduction(found) : null
 }
 
 export async function generateMetadata({
@@ -18,11 +27,11 @@ export async function generateMetadata({
   params: Params
 }): Promise<Metadata> {
   const { slug } = await params
-  const prod = findProduction(slug)
+  const prod = await loadProduction(slug)
   if (!prod) return { title: 'Not Found' }
   return {
     title: `${prod.ko} ${prod.en}`,
-    description: prod.synopsisLead,
+    description: prod.description.split('\n')[0],
     alternates: { canonical: `/production/${prod.slug}` },
   }
 }
@@ -33,14 +42,13 @@ export default async function ProductionDetailPage({
   params: Params
 }) {
   const { slug } = await params
-  const prod = findProduction(slug)
+  const prod = await loadProduction(slug)
   if (!prod) notFound()
 
   return (
     <>
       <JsonLd data={movieLd(prod)} />
 
-      {/* Synopsis */}
       <section className="section" style={{ paddingTop: '160px' }}>
         <div className="container container--wide">
           <div className="kw-prod-synopsis fade-up">
@@ -49,15 +57,17 @@ export default async function ProductionDetailPage({
             </div>
             <div className="kw-prod-synopsis__body">
               <span className="eyebrow">
-                K Works Productions · {prod.year}
+                K Works Productions · {getReleaseYear(prod)}
               </span>
               <h1 className="en">{prod.en}</h1>
               <h2 className="ko">{prod.ko}</h2>
 
               <div className="kw-prod-synopsis__meta">
-                <div>
-                  Year<strong>{prod.year}</strong>
-                </div>
+                {prod.releaseDate && (
+                  <div>
+                    Release<strong>{prod.releaseDate}</strong>
+                  </div>
+                )}
                 <div>
                   Genre<strong>{prod.genre}</strong>
                 </div>
@@ -79,18 +89,12 @@ export default async function ProductionDetailPage({
                 </div>
               </div>
 
-              <p>
-                {prod.synopsisLead}
-                <br />
-                <br />
-                {prod.synopsisBody}
-              </p>
+              <p style={{ whiteSpace: 'pre-line' }}>{prod.description}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stills Gallery */}
       {prod.stills && prod.stills.length > 0 && (
         <section className="section">
           <div className="container container--wide">
@@ -112,7 +116,6 @@ export default async function ProductionDetailPage({
         </section>
       )}
 
-      {/* Trailer */}
       {prod.trailer && (
         <section className="section">
           <div className="container container--wide">
@@ -135,7 +138,6 @@ export default async function ProductionDetailPage({
         </section>
       )}
 
-      {/* Cast & Crew */}
       <section className="section">
         <div className="container">
           <div className="kw-cast fade-up">
@@ -170,24 +172,10 @@ export default async function ProductionDetailPage({
                 </>
               )}
 
-              {prod.cast.music && (
-                <>
-                  <dt>Music · 음악</dt>
-                  <dd>{prod.cast.music}</dd>
-                </>
-              )}
-
               {prod.cast.producer && (
                 <>
                   <dt>Producer · 제작</dt>
                   <dd>{prod.cast.producer}</dd>
-                </>
-              )}
-
-              {prod.cast.distributor && (
-                <>
-                  <dt>Distributor · 배급</dt>
-                  <dd>{prod.cast.distributor}</dd>
                 </>
               )}
             </dl>
@@ -195,7 +183,6 @@ export default async function ProductionDetailPage({
         </div>
       </section>
 
-      {/* Watch On */}
       {prod.watchOn.length > 0 && (
         <section className="section--tight">
           <div className="container">

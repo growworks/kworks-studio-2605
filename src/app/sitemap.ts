@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
-import { ARTISTS } from '@/data/artists'
-import { PRODUCTIONS } from '@/data/productions'
-import { NOTICES } from '@/data/notices'
 import { SITE_URL } from '@/lib/constants'
+import { getPortfolios } from '@/lib/api/portfolios'
+import { getPosts } from '@/lib/api/posts'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = 'force-dynamic'
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL || 'https://k-worksstudio.com'
   const now = new Date()
 
@@ -17,26 +18,43 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
   ]
 
-  const artistPages: MetadataRoute.Sitemap = ARTISTS.map((a) => ({
-    url: `${baseUrl}/artists/${a.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly',
-    priority: 0.8,
-  }))
+  try {
+    const [artists, prods, notices] = await Promise.all([
+      getPortfolios({ category: '아티스트' }),
+      getPortfolios({ category: '프로덕션' }),
+      getPosts({ category: '공지사항' }),
+    ])
 
-  const productionPages: MetadataRoute.Sitemap = PRODUCTIONS.map((p) => ({
-    url: `${baseUrl}/production/${p.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly',
-    priority: 0.8,
-  }))
+    const artistPages: MetadataRoute.Sitemap = artists.items
+      .map((p) => (p.custom as Record<string, unknown> | null | undefined)?.slug)
+      .filter((s): s is string => typeof s === 'string' && s.length > 0)
+      .map((slug) => ({
+        url: `${baseUrl}/artists/${slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.8,
+      }))
 
-  const noticePages: MetadataRoute.Sitemap = NOTICES.map((n) => ({
-    url: `${baseUrl}/notice/${n.id}`,
-    lastModified: now,
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }))
+    const prodPages: MetadataRoute.Sitemap = prods.items
+      .map((p) => (p.custom as Record<string, unknown> | null | undefined)?.slug)
+      .filter((s): s is string => typeof s === 'string' && s.length > 0)
+      .map((slug) => ({
+        url: `${baseUrl}/production/${slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.8,
+      }))
 
-  return [...staticPages, ...artistPages, ...productionPages, ...noticePages]
+    const noticePages: MetadataRoute.Sitemap = notices.items.map((n) => ({
+      url: `${baseUrl}/notice/${n.id}`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    }))
+
+    return [...staticPages, ...artistPages, ...prodPages, ...noticePages]
+  } catch (e) {
+    console.error('[sitemap] API fetch failed', e)
+    return staticPages
+  }
 }
