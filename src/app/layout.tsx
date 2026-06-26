@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@/components/Analytics'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { FloatingSocial } from '@/components/layout/FloatingSocial'
 import { RevealRoot } from '@/components/layout/RevealRoot'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { SITE } from '@/data/site'
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         {children}
         <Footer />
+        <FloatingSocial />
         <RevealRoot />
         <Analytics />
       </body>

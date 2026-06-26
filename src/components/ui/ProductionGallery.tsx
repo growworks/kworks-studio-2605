@@ -1,7 +1,12 @@
 type Still = { src: string; alt: string }
 
+/**
+ * src 가 캐릭터 포스터인지 판정.
+ * - 정적: `/character-01.jpg` 같은 경로 패턴
+ * - API: S3 URL 뒤에 매퍼가 붙이는 `#character-1` 프래그먼트
+ */
 function isCharacter(s: Still) {
-  return /\/character-\d/.test(s.src)
+  return /[/#]character[-_]\d/.test(s.src)
 }
 
 export function ProductionGallery({ stills }: { stills: Still[] }) {

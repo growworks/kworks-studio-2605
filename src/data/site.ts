@@ -1,3 +1,11 @@
+export type SocialType =
+  | 'instagram'
+  | 'youtube'
+  | 'vimeo'
+  | 'facebook'
+  | 'twitter'
+  | 'tiktok'
+
 export const SITE = {
   brand: 'K Works Studio',
   brandKo: '케이웍스 스튜디오',
@@ -12,11 +20,13 @@ export const SITE = {
   registration: '대중문화예술기획업 제24109-2025-000013호',
   officeHours: '평일 10:00 ~ 19:00 (KST)',
   naverMapUrl: 'https://map.naver.com/p/entry/place/1453720090',
-  social: {
-    instagram: '#',
-    youtube: '#',
-    vimeo: '#',
-  },
+  social: [
+    {
+      type: 'instagram',
+      label: 'Instagram',
+      url: 'https://www.instagram.com/kworksstudio_official',
+    },
+  ] as { type: SocialType; label: string; url: string }[],
   legal: {
     privacy: '#',
     terms: '#',

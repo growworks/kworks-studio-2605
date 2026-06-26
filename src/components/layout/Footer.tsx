@@ -1,4 +1,5 @@
 import { SITE } from '@/data/site'
+import { SocialIcons } from '@/components/ui/SocialIcons'
 
 export function Footer() {
   return (
@@ -33,26 +34,7 @@ export function Footer() {
             <dt>Registration</dt>
             <dd>{SITE.registration}</dd>
           </dl>
-          <div className="kw-footer__social">
-            <a href={SITE.social.instagram} aria-label="Instagram">
-              <svg viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r=".5" fill="currentColor" />
-              </svg>
-            </a>
-            <a href={SITE.social.youtube} aria-label="YouTube">
-              <svg viewBox="0 0 24 24">
-                <rect x="2" y="5" width="20" height="14" rx="2" />
-                <path d="M10 9l5 3-5 3z" />
-              </svg>
-            </a>
-            <a href={SITE.social.vimeo} aria-label="Vimeo">
-              <svg viewBox="0 0 24 24">
-                <path d="M3 8c1.5-1 3-2 5-2 1 0 1.6 1 1.8 2.5L11 14c.4 1 .8 1 1.4 0 1-1.5 2-3 2-4.5 0-1-.5-1.5-1.5-1.5-.5 0-1 .1-1.5.3 1-2 3-3 4.8-2.8 2 .3 2.8 2 2.3 4-1 4-5 9-7.5 9-1.5 0-2.3-1.5-3-4l-1.5-5C6.3 8.6 6 8.4 5 9l-1-1z" />
-              </svg>
-            </a>
-          </div>
+          <SocialIcons variant="footer" />
         </div>
 
         <div className="kw-footer__bottom">

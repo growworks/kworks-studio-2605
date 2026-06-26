@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { NAV, SITE } from '@/data/site'
+import { SocialIcons } from '@/components/ui/SocialIcons'
 
 export function Header() {
   const pathname = usePathname()
@@ -56,6 +57,7 @@ export function Header() {
               </Link>
             ))}
           </nav>
+          <SocialIcons variant="header" />
           <button
             type="button"
             className="kw-hamburger"
